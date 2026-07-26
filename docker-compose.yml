@@ -1,51 +1,8 @@
-services:
-  postgres:
-    image: postgres:16
-    restart: always
-    environment:
-      POSTGRES_USER: chat01
-      POSTGRES_PASSWORD: chat01senha
-      POSTGRES_DB: chat01
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  redis:
-    image: redis:7-alpine
-    restart: always
-
-  backend:
-    build: ./backend
-    restart: always
-    depends_on:
-      - postgres
-      - redis
-    environment:
-      NODE_ENV: ""
-      BACKEND_URL: https://chatapi.pachecocloud.com.br
-      FRONTEND_URL: https://chat.pachecocloud.com.br
-      PROXY_PORT: "8080"
-      PORT: "8080"
-
-      DB_DIALECT: postgres
-      DB_HOST: postgres
-      DB_PORT: "5432"
-      DB_USER: chat01
-      DB_PASS: chat01senha
-      DB_NAME: chat01
-
-      REDIS_URI: redis://redis:6379
-
-      JWT_SECRET: PachecoChat2026JwtSecretMuitoSeguro
-      JWT_REFRESH_SECRET: PachecoChat2026RefreshSecretMuitoSeguro
-
-  frontend:
-    build:
-      context: ./frontend
-      args:
-        REACT_APP_BACKEND_URL: https://chatapi.pachecocloud.com.br
-    restart: always
-    depends_on:
-      - backend
-
-volumes:
-  postgres_data:
+frontend:
+  build:
+    context: ./frontend
+    args:
+      REACT_APP_BACKEND_URL: https://chatapi.pachecocloud.com.br
+  restart: always
+  depends_on:
+    - backend
