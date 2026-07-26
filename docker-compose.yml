@@ -1,9 +1,6 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16
-    container_name: chat01-postgres
     restart: always
     environment:
       POSTGRES_USER: chat01
@@ -11,34 +8,23 @@ services:
       POSTGRES_DB: chat01
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5435:5432"
 
   redis:
     image: redis:7-alpine
-    container_name: chat01-redis
     restart: always
-    ports:
-      - "6385:6379"
 
   backend:
     build: ./backend
-    container_name: chat01-backend
     restart: always
     depends_on:
       - postgres
       - redis
-    ports:
-      - "8085:8080"
 
   frontend:
     build: ./frontend
-    container_name: chat01-frontend
     restart: always
     depends_on:
       - backend
-    ports:
-      - "3005:80"
 
 volumes:
   postgres_data:
